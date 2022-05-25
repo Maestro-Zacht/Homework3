@@ -13,7 +13,7 @@ services:
     image: mysql:8
     environment:
       - MYSQL_DATABASE=Cycling
-      - MYSQL_ROOT_PASSWORD=dummyp@ssword45
+      - MYSQL_ROOT_PASSWORD=dummypassword45
     volumes:
       - mysql-data:/var/lib/mysql
       - ./:/webapp
