@@ -30,8 +30,8 @@ CREATE TABLE Cyclist(
     FOREIGN KEY (TID) REFERENCES Team(TID) ON DELETE NO ACTION ON UPDATE CASCADE
 );
 CREATE TABLE Stage(
-    Edition INTEGER,
-    SID INTEGER,
+    Edition INTEGER CHECK (Edition > 0),
+    SID INTEGER CHECK (SID > 0),
     DepartureCity VARCHAR(50) NOT NULL,
     ArrivalCity VARCHAR(50) NOT NULL,
     Length INTEGER NOT NULL CHECK (Length > 0),
@@ -70,6 +70,7 @@ INSERT INTO Stage(
         Difficulty
     )
 VALUES (1, 1, 'Turin', 'Milan', 141000, 500, 3),
+    (2, 1, 'Turin', 'Milan', 141000, 500, 3),
     (1, 2, 'Turin', 'Susa', 80000, 1000, 6),
     (2, 2, 'Turin', 'Susa', 90000, 2000, 9);
 INSERT INTO Individual_ranking(
@@ -81,6 +82,8 @@ INSERT INTO Individual_ranking(
 VALUES (1, 1, 1, 1),
     (1, 1, 2, 3),
     (1, 1, 3, 2),
+    (2, 1, 1, 2),
+    (2, 1, 2, 1),
     (1, 2, 1, 1),
     (2, 2, 1, 1);
 COMMIT;
