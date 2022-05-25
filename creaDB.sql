@@ -1,54 +1,51 @@
-SET storage_engine = InnoDB;
-SET FOREIGN_KEY_CHECKS = 1;
 -- create database
 CREATE DATABASE IF NOT EXISTS `Cycling`;
 USE `Cycling`;
 -- drop tables if exist
-DROP TABLE IF EXISTS Cyclist;
-DROP TABLE IF EXISTS Team;
-DROP TABLE IF EXISTS Stage;
-DROP TABLE IF EXISTS Individual_ranking;
--- create tables
 SET autocommit = 0;
 START TRANSACTION;
-CREATE DOMAIN INCR AS INTEGER CHECK (INCR > 0);
-CREATE DOMAIN CYEAR AS INTEGER CHECK (
-    CYEAR >= 1900
-    AND CYEAR <= 2000
-);
-CREATE DOMAIN CDIFFICULTY AS SMALLINT CHECK(
-    CDIFFICULTY >= 1
-    and CDIFFICULTY <= 10
-);
+DROP TABLE IF EXISTS Individual_ranking;
+DROP TABLE IF EXISTS Stage;
+DROP TABLE IF EXISTS Cyclist;
+DROP TABLE IF EXISTS Team;
+COMMIT;
+-- create tables
+START TRANSACTION;
 CREATE TABLE Team(
-    TID INCR PRIMARY KEY,
+    TID INTEGER PRIMARY KEY CHECK (TID > 0),
     NameT VARCHAR(50) NOT NULL,
-    YearFoundation CYEAR NOT NULL,
-    OfficeLocation VARCHAR(50)
+    YearFoundation INTEGER NOT NULL CHECK (
+        YearFoundation >= 1900
+        AND YearFoundation <= 2000
+    ),
+    OfficeLocation VARCHAR(50) DEFAULT NULL
 );
 CREATE TABLE Cyclist(
-    CID INCR PRIMARY KEY,
+    CID INTEGER PRIMARY KEY CHECK (CID > 0),
     Name VARCHAR(50) NOT NULL,
     Surname VARCHAR(50) NOT NULL,
     Nationality VARCHAR(50) NOT NULL,
-    TID INCR NOT NULL,
+    TID INTEGER NOT NULL,
     BirthYear INTEGER NOT NULL CHECK(BirthYear > 1800),
     FOREIGN KEY (TID) REFERENCES Team(TID) ON DELETE NO ACTION ON UPDATE CASCADE
 );
 CREATE TABLE Stage(
-    Edition INCR,
-    SID INCR,
+    Edition INTEGER,
+    SID INTEGER,
     DepartureCity VARCHAR(50) NOT NULL,
     ArrivalCity VARCHAR(50) NOT NULL,
-    Length INTEGER NOT NULL CHECK (Lenght > 0),
+    Length INTEGER NOT NULL CHECK (Length > 0),
     DeltaHeight INTEGER NOT NULL CHECK (DeltaHeight > 0),
-    Difficulty CDIFFICULTY NOT NULL,
+    Difficulty SMALLINT NOT NULL CHECK(
+        Difficulty >= 1
+        and Difficulty <= 10
+    ),
     PRIMARY KEY(Edition, SID)
 );
 CREATE TABLE Individual_ranking(
-    Edition INCR,
-    SID INCR,
-    CID INCR,
+    Edition INTEGER,
+    SID INTEGER,
+    CID INTEGER,
     Location INTEGER NOT NULL CHECK(Location > 0),
     PRIMARY KEY(Edition, SID, CID),
     FOREIGN KEY (Edition, SID) REFERENCES Stage(Edition, SID) ON DELETE CASCADE ON UPDATE CASCADE,
@@ -58,7 +55,7 @@ COMMIT;
 START TRANSACTION;
 INSERT INTO Team(TID, NameT, YearFoundation, OfficeLocation)
 VALUES (1, 'Team1', 1950, 'Turin'),
-    (2, 'Team2', 1974);
+    (2, 'Team2', 1974, NULL);
 INSERT INTO Cyclist(CID, Name, Surname, Nationality, TID, BirthYear)
 VALUES (1, 'Name1', 'Surname1', 'Italy', 1, 2000),
     (2, 'Name2', 'Surname2', 'Germany', 1, 1999),
