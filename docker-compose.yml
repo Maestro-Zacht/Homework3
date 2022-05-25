@@ -16,6 +16,8 @@ services:
       - MYSQL_ROOT_PASSWORD=dummyp@ssword45
     volumes:
       - mysql-data:/var/lib/mysql
+    ports:
+      - 3306:3306
 
 volumes:
   mysql-data:
