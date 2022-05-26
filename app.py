@@ -1,4 +1,4 @@
-from flask import Flask, render_template
+from flask import Flask, render_template, request
 from sqlalchemy import create_engine
 from sqlalchemy.exc import SQLAlchemyError
 
@@ -18,18 +18,18 @@ def index():
     return render_template('homepage.html')
 
 
-@app.route('/cyclist')
+@app.route('/cyclist', methods=['GET', 'POST'])
 def cyclist():
     query = "SELECT CID, Name, Surname FROM Cyclist;"
     try:
         con = engine.connect()
-        res = con.execute(query).fetchall()
+        cyclists = con.execute(query).fetchall()
         con.close()
     except SQLAlchemyError as e:
         print(f"Error! {e}")
-        raise e
+        return render_template('error.html')
 
-    return render_template('cyclist.html', cyclists=res)
+    return render_template('cyclist.html', cyclists=cyclists)
 
 
 if __name__ == '__main__':
