@@ -2,19 +2,19 @@
 
 {% block extra_css %}
     <style>
-        .error {
-            background-color: red;
+        .success {
+            background-color: green;
             color: white;
         }
     </style>
 {% endblock extra_css %}
 
 {% block content %}
-    <div class="card text-center error">
+    <div class="card text-center success">
         <div class="card-body">
-            <h3 class="card-title">Something went wrong...</h3>
-            {% if error_message %}
-                <p class="card-text">{{ error_message }}</p>
+            <h3 class="card-title">Success!</h3>
+            {% if success_message %}
+                <p class="card-text">{{ success_message }}</p>
             {% endif %}
         </div>
     </div>

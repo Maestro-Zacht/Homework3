@@ -1,0 +1,36 @@
+{% extends 'base.html' %}
+
+{% block content %}
+    <h2>Insert Cyclist</h2>
+    <form method="POST">
+        <div class="form-group">
+            <label for="cyclistID">Cyclist ID</label>
+            <input name="CID" id="cyclistID" type="number" class="form-control" min="1" step="1" placeholder="e.g. 123" required>
+        </div>
+        <div class="form-group">
+            <label for="cyclistName">Cyclist Name</label>
+            <input name="Name" id="cyclistName" type="text" class="form-control" placeholder="e.g. Mario" required>
+        </div>
+        <div class="form-group">
+            <label for="cyclistSurname">Cyclist Surname</label>
+            <input name="Surname" id="cyclistSurname" type="text" class="form-control" placeholder="e.g. Rossi" required>
+        </div>
+        <div class="form-group">
+            <label for="cyclistNation">Cyclist Nation</label>
+            <input name="Nationality" id="cyclistNation" type="text" class="form-control" placeholder="e.g. Italy" required>
+        </div>
+        <div class="form-group">
+            <label for="cyclistTeam">Cyclist Team</label>
+            <select name="TID" id="cyclistTeam" class="form-control" required>
+                {% for team in teams %}
+                    <option value="{{ team.TID }}">{{ team.TID }} - {{ team.NameT }}</option>
+                {% endfor %}
+            </select>
+        </div>
+        <div class="form-group">
+            <label for="cyclistBirthYear">Year of Birth</label>
+            <input type="number" name="BirthYear" id="cyclistBirthYear" class="form-control" placeholder="e.g. 1999" min="1800" step="1" required>
+        </div>
+        <button type="submit" class="btn btn-primary">Insert</button>
+    </form>
+{% endblock content %}

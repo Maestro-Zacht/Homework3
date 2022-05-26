@@ -17,9 +17,9 @@
         <div class="form-group">
             <label for="stageInput">Insert Stage Id</label>
             {% if selected_SID %}
-                <input type="number" name="SID" id="stageInput" class="form-control" min="1" value="{{ selected_SID }}" required>
+                <input type="number" name="SID" id="stageInput" class="form-control" min="1" step="1" value="{{ selected_SID }}" required>
             {% else %}
-                <input type="number" name="SID" id="stageInput" class="form-control" min="1" required>
+                <input type="number" name="SID" id="stageInput" class="form-control" min="1" step="1" required>
             {% endif %}
         </div>
         <button type="submit" class="btn btn-primary">Submit</button>
