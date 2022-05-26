@@ -20,16 +20,44 @@ def index():
 
 @app.route('/cyclist', methods=['GET', 'POST'])
 def cyclist():
-    query = "SELECT CID, Name, Surname FROM Cyclist;"
+    query_cyclists = "SELECT CID, Name, Surname FROM Cyclist;"
     try:
         con = engine.connect()
-        cyclists = con.execute(query).fetchall()
-        con.close()
+        cyclists = con.execute(query_cyclists).fetchall()
+
+        if request.method == 'POST':
+            CID = int(request.form['CID'])
+            SID = int(request.form['SID'])
+
+            query_position = f"""
+            SELECT C1.Name,
+                C1.Surname,
+                T1.NameT,
+                S1.SID,
+                S1.Edition,
+                I1.Location
+            FROM Cyclist C1,
+                Team T1,
+                Individual_ranking I1,
+                Stage S1
+            WHERE T1.TID = C1.TID
+                AND C1.CID = I1.CID
+                AND S1.SID = I1.SID
+                AND S1.Edition = I1.Edition
+                AND C1.CID = {CID}
+                AND S1.SID = {SID}
+            ORDER BY S1.Edition ASC;
+            """
+            results_position = con.execute(query_position).fetchall()
+        else:
+            results_position = CID = SID = None
     except SQLAlchemyError as e:
         print(f"Error! {e}")
         return render_template('error.html')
+    finally:
+        con.close()
 
-    return render_template('cyclist.html', cyclists=cyclists)
+    return render_template('cyclist.html', cyclists=cyclists, selected_CID=CID, selected_SID=SID, results=results_position)
 
 
 if __name__ == '__main__':

@@ -1,15 +1,56 @@
 {% extends 'base.html' %}
 
 {% block content %}
-    <form>
+    <form method="POST">
         <div class="form-group">
             <label for="cyclistSelect">Select Cyclist</label>
-            <select id="cyclistSelect" class="form-control">
+            <select name="CID" id="cyclistSelect" class="form-control" required>
                 {% for cyclist in cyclists %}
-                    <option value="{{ cyclist.CID }}">{{ cyclist.CID }} - {{ cyclist.Name }} {{ cyclist.Surname }}</option>
+                    {% if selected_CID == cyclist.CID %}
+                        <option value="{{ cyclist.CID }}" selected>{{ cyclist.CID }} - {{ cyclist.Name }} {{ cyclist.Surname }}</option>
+                    {% else %}
+                        <option value="{{ cyclist.CID }}">{{ cyclist.CID }} - {{ cyclist.Name }} {{ cyclist.Surname }}</option>
+                    {% endif %}
                 {% endfor %}
             </select>
         </div>
+        <div class="form-group">
+            <label for="stageInput">Insert Stage Id</label>
+            <input type="number" name="SID" id="stageInput" class="form-control" min="1" required>
+        </div>
         <button type="submit" class="btn btn-primary">Submit</button>
     </form>
+
+    {% if results %}
+        <br>
+        <div class="text-center">
+            <h2>Results</h2>
+        </div>
+        <br>
+        <table class="table table-hover">
+            <thead>
+                <tr>
+                    <th scope="col">Name</th>
+                    <th scope="col">Surname</th>
+                    <th scope="col">Team</th>
+                    <th scope="col">Stage ID</th>
+                    <th scope="col">Edition</th>
+                    <th scope="col">Position</th>
+                </tr>
+            </thead>
+
+            <tbody>
+                {% for position in results %}
+                    <tr>
+                        <td>{{ position.Name }}</td>
+                        <td>{{ position.Surname }}</td>
+                        <td>{{ position.NameT }}</td>
+                        <td>{{ position.SID }}</td>
+                        <td>{{ position.Edition }}</td>
+                        <td>{{ position.Location }}</td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    {% endif %}
 {% endblock content %}
