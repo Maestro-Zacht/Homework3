@@ -1,4 +1,4 @@
-from flask import Flask, render_template, request, redirect, url_for
+from flask import Flask, render_template, request
 from sqlalchemy import create_engine
 from sqlalchemy.exc import SQLAlchemyError
 
@@ -22,6 +22,7 @@ def index():
 def cyclist():
     try:
         con = engine.connect()
+
         query_cyclists = "SELECT CID, Name, Surname FROM Cyclist;"
         cyclists = con.execute(query_cyclists).fetchall()
 
@@ -112,6 +113,84 @@ def newcyclist():
         con.close()
 
     return render_template('newcyclist.html', teams=results_teams)
+
+
+@app.route('/newposition', methods=['GET', 'POST'])
+def position():
+    try:
+        con = engine.connect()
+
+        query_cyclists = "SELECT CID, Name, Surname FROM Cyclist;"
+        cyclists = con.execute(query_cyclists).fetchall()
+
+        query_stages = "SELECT SID, Edition FROM Stage;"
+        stages = con.execute(query_stages).fetchall()
+
+        if request.method == 'POST':
+            CID = int(request.form['CID'])
+            SID, Edition = request.form["SID-Edition"].split('-')
+            Location = int(request.form['Location'])
+
+            with con.begin() as trans:
+                query_cid = f"""
+                SELECT COUNT(*)
+                FROM Cyclist
+                WHERE CID = {CID};
+                """
+                result_cid = con.execute(query_cid)
+                if result_cid.first()[0] == 0:
+                    trans.rollback()
+                    return render_template('error.html', error_message="Cyclist not found.")
+
+                query_stage = f"""
+                SELECT COUNT(*)
+                FROM Stage
+                WHERE Edition = {Edition} AND SID = {SID};
+                """
+                result_stage = con.execute(query_stage)
+                if result_stage.first()[0] == 0:
+                    trans.rollback()
+                    return render_template('error.html', error_message="Stage not found.")
+
+                query_position = f"""
+                SELECT COUNT(*)
+                FROM Individual_ranking
+                WHERE Edition = {Edition}
+                    AND SID = {SID}
+                    AND Location = {Location};
+                """
+                result_position = con.execute(query_position)
+                if result_position.first()[0] != 0:
+                    trans.rollback()
+                    return render_template('error.html', error_message="Position already occupied.")
+
+                query_cyclist = f"""
+                SELECT COUNT(*)
+                FROM Individual_ranking
+                WHERE Edition = {Edition}
+                    AND SID = {SID}
+                    AND CID = {CID};
+                """
+                result_cyclist = con.execute(query_cyclist)
+                if result_cyclist.first()[0] != 0:
+                    trans.rollback()
+                    return render_template('error.html', error_message="Cyclist is already in that stage.")
+
+                insert_query = f"""
+                INSERT INTO Individual_ranking (Edition, SID, CID, Location)
+                VALUES ({Edition}, {SID}, {CID}, {Location});
+                """
+                con.execute(insert_query)
+
+            return render_template('success.html', success_message="Position added!")
+
+    except SQLAlchemyError as e:
+        print(f"Error! {e}")
+        return render_template('error.html', error_message="Database error. Contact administrators")
+    finally:
+        con.close()
+
+    return render_template('newposition.html', cyclists=cyclists, stages=stages)
 
 
 if __name__ == '__main__':

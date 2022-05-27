@@ -1,0 +1,28 @@
+{% extends 'base.html' %}
+
+{% block content %}
+    <h2>Insert Cyclist</h2>
+    <form method="POST">
+        <div class="form-group">
+            <label for="cyclistSelect">Select Cyclist</label>
+            <select name="CID" id="cyclistSelect" class="form-control" required>
+                {% for cyclist in cyclists %}
+                    <option value="{{ cyclist.CID }}">{{ cyclist.CID }} - {{ cyclist.Name }} {{ cyclist.Surname }}</option>
+                {% endfor %}
+            </select>
+        </div>
+        <div class="form-group">
+            <label for="stageSelect">Stage - Edition</label>
+            <select name="SID-Edition" id="stageSelect" class="form-control" required>
+                {% for stage in stages %}
+                    <option value="{{ stage.SID }}-{{ stage.Edition }}">{{ stage.SID }} - {{ stage.Edition }}</option>
+                {% endfor %}
+            </select>
+        </div>
+        <div class="form-group">
+            <label for="cyclistPosition">Cyclist Position</label>
+            <input name="Location" id="cyclistPosition" type="number" class="form-control" min="1" step="1" placeholder="e.g. 1" required>
+        </div>
+        <button type="submit" class="btn btn-primary">Insert</button>
+    </form>
+{% endblock content %}
