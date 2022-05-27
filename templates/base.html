@@ -13,6 +13,16 @@
         {% block extra_css %}{% endblock extra_css %}
     </head>
     <body>
+        <nav class="navbar navbar-expand-lg navbar-light bg-light">
+            <div class="collapse navbar-collapse justify-content-center" id="navbarNavAltMarkup">
+                <div class="navbar-nav">
+                    <a class="nav-item nav-link" href="{{ url_for('index') }}">Home</a>
+                    <a class="nav-item nav-link" href="{{ url_for('cyclist') }}">Positions</a>
+                    <a class="nav-item nav-link" href="{{ url_for('newcyclist') }}">New Cyclist</a>
+                    <a class="nav-item nav-link" href="{{ url_for('position') }}">New Position</a>
+                </div>
+            </div>
+        </nav>
         <div class="container">
             {% block content %}
             {% endblock content %}
