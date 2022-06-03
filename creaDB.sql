@@ -26,7 +26,10 @@ CREATE TABLE Cyclist(
     Surname VARCHAR(50) NOT NULL,
     Nationality VARCHAR(50) NOT NULL,
     TID INTEGER NOT NULL,
-    BirthYear INTEGER NOT NULL CHECK(BirthYear > 1800),
+    BirthYear INTEGER NOT NULL CHECK(
+        BirthYear >= 1900
+        AND BirthYear <= 2000
+    ),
     FOREIGN KEY (TID) REFERENCES Team(TID) ON DELETE NO ACTION ON UPDATE CASCADE
 );
 CREATE TABLE Stage(
@@ -59,7 +62,7 @@ VALUES (1, 'Team1', 1950, 'Turin'),
 INSERT INTO Cyclist(CID, Name, Surname, Nationality, TID, BirthYear)
 VALUES (1, 'Name1', 'Surname1', 'Italy', 1, 2000),
     (2, 'Name2', 'Surname2', 'Germany', 1, 1999),
-    (3, 'Name3', 'Surname3', 'Spain', 2, 2002);
+    (3, 'Name3', 'Surname3', 'Spain', 2, 1988);
 INSERT INTO Stage(
         Edition,
         SID,
